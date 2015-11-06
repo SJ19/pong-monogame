@@ -18,8 +18,8 @@ namespace Snake_2
         private Player playerTwo;
         private Ball ball;
 
-        private int ballSpeedX = 10;
-        private int ballSpeedY = 10;
+        private int ballSpeedX;
+        private int ballSpeedY;
 
         private GamePadState gamePadStatePlayerOne;
         private GamePadState gamePadStatePlayerTwo;
@@ -40,8 +40,7 @@ namespace Snake_2
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            rollDirectionX();
             base.Initialize();
         }
 
@@ -92,12 +91,12 @@ namespace Snake_2
                 ballSpeedX = -ballSpeedX;
             }
 
-            if (ballHitsBottomOrTop(ball))
+            if (ballHitsBottomOrTopOfScreen(ball))
             {
                 ballSpeedY = -ballSpeedY;
             }
 
-            if (ballHitsWall(ball))
+            if (ballHitsLeftOrRightOfScreen(ball))
             {
                 Exit();
             }
@@ -105,22 +104,69 @@ namespace Snake_2
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// Randomly generates the direction of the ball.
+        /// </summary>
+        private void rollDirectionX()
+        {
+            Random random = new Random();
+            switch (random.Next(1) + 1)
+            {
+                case 1:
+                    ballSpeedX = 10;
+                    break;
+                case 2:
+                    ballSpeedX = 10;
+                    break;
+            }
+            switch (random.Next(1) + 1)
+            {
+                case 1:
+                    ballSpeedY = 10;
+                    break;
+                case 2:
+                    ballSpeedY = 10;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Move the ball according to changeX and changeY.
+        /// </summary>
+        /// <param name="ball"></param>
+        /// <param name="changeX"></param>
+        /// <param name="changeY"></param>
         private void ballMove(Ball ball, int changeX, int changeY)
         {
             ball.position.X += changeX;
             ball.position.Y += changeY;
         }
 
-        private bool ballHitsWall(Ball ball)
+        /// <summary>
+        /// Checks whether the ball hits the left or right side of the screen.
+        /// </summary>
+        /// <param name="ball"></param>
+        /// <returns></returns>
+        private bool ballHitsLeftOrRightOfScreen(Ball ball)
         {
             return ball.position.X >= GraphicsDevice.Viewport.Width - ball.image.Width || ball.position.X <= 0;
         }
 
-        private bool ballHitsBottomOrTop(Ball ball)
+        /// <summary>
+        /// Checks whether the ball hits the top or bottom of the screen.
+        /// </summary>
+        /// <param name="ball"></param>
+        /// <returns></returns>
+        private bool ballHitsBottomOrTopOfScreen(Ball ball)
         {
             return ball.position.Y >= GraphicsDevice.Viewport.Height - ball.image.Height || ball.position.Y <= 0;
         }
 
+        /// <summary>
+        /// Checks for thumbstick input and does actions.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="gamePadState"></param>
         private void handleStick(Player player, GamePadState gamePadState)
         {
             bool reachedTopOfScreen = player.position.Y <= 0;
@@ -136,6 +182,12 @@ namespace Snake_2
             }
         }
 
+        /// <summary>
+        /// Checks whether the ball and a player collide.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="ball"></param>
+        /// <returns></returns>
         private bool ballAndPlayerCollide(Player player, Ball ball)
         {
             Rectangle playerRectangle = new Rectangle((int)player.position.X, (int)player.position.Y, player.image.Width, player.image.Height);
