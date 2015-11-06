@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Snake_Monogame;
+using Pong_Monogame;
 using System;
 
-namespace Snake_2
+namespace Pong
 {
     /// <summary>
     /// This is the main type for your game.
@@ -176,43 +176,58 @@ namespace Snake_2
         /// <param name="gamePadState"></param>
         private void handleButtons(Player player, GamePadState gamePadState)
         {
-            bool reachedTopOfScreen = player.position.Y <= 0;
-            bool reachedBottomOfScreen = player.position.Y > GraphicsDevice.Viewport.Height - GameConstants.PLAYER_HEIGHT;
-
-            if (gamePadState.ThumbSticks.Left.Y > 0 && !reachedTopOfScreen)
+            if (gamePadState.ThumbSticks.Left.Y > 0 && !playerReachedTopOfScreen(player))
             {
                 player.position.Y -= 10;
             }
-            if (gamePadState.ThumbSticks.Left.Y < 0 && !reachedBottomOfScreen)
+            if (gamePadState.ThumbSticks.Left.Y < 0 && !playerReachedBottomOfScreen(player))
             {
                 player.position.Y += 10;
             }
         }
 
+        /// <summary>
+        /// Control player by keyboard.
+        /// </summary>
+        /// <param name="keyState"></param>
         private void handleKeyBoard(KeyboardState keyState)
         {
-            bool playerOneReachedTopOfScreen = playerOne.position.Y <= 0;
-            bool playerOneReachedBottomOfScreen = playerOne.position.Y > GraphicsDevice.Viewport.Height - GameConstants.PLAYER_HEIGHT;
-
-            bool playerTwoReachedTopOfScreen = playerTwo.position.Y <= 0;
-            bool playerTwoReachedBottomOfScreen = playerTwo.position.Y > GraphicsDevice.Viewport.Height - GameConstants.PLAYER_HEIGHT;
-
-            if (keyState.IsKeyDown(Keys.Up) && !playerTwoReachedTopOfScreen)
+            if (keyState.IsKeyDown(Keys.Up) && !playerReachedTopOfScreen(playerTwo))
             {
                 playerTwo.position.Y -= 10;
             }
-            if (keyState.IsKeyDown(Keys.Down) && !playerTwoReachedBottomOfScreen)
+            if (keyState.IsKeyDown(Keys.Down) && !playerReachedBottomOfScreen(playerTwo))
             {
                 playerTwo.position.Y += 10;
             }
-            if (keyState.IsKeyDown(Keys.W) && !playerOneReachedTopOfScreen)
+            if (keyState.IsKeyDown(Keys.W) && !playerReachedTopOfScreen(playerOne))
             {
                 playerOne.position.Y -= 10;
             }
-            if (keyState.IsKeyDown(Keys.S) && !playerOneReachedBottomOfScreen)
+            if (keyState.IsKeyDown(Keys.S) && !playerReachedBottomOfScreen(playerOne))
             {
                 playerOne.position.Y += 10;
             }
+        }
+
+        /// <summary>
+        /// Checks whether the player hits the upper bound of the screen.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        private bool playerReachedTopOfScreen(Player player)
+        {
+            return player.position.Y <= 0;
+        }
+
+        /// <summary>
+        /// Checks whether the player hits the lower bound of the screen.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        private bool playerReachedBottomOfScreen(Player player)
+        {
+            return player.position.Y > GraphicsDevice.Viewport.Height - GameConstants.PLAYER_HEIGHT;
         }
 
         /// <summary>

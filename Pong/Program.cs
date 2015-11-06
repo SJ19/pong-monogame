@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Snake_2
+namespace Pong
 {
 #if WINDOWS || LINUX
     /// <summary>

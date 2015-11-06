@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Snake_Monogame
+namespace Pong_Monogame
 {
     abstract class Sprite
     {
