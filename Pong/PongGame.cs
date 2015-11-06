@@ -24,6 +24,8 @@ namespace Snake_2
         private GamePadState gamePadStatePlayerOne;
         private GamePadState gamePadStatePlayerTwo;
 
+        private KeyboardState keyState;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -78,11 +80,16 @@ namespace Snake_2
             gamePadStatePlayerOne = GamePad.GetState(PlayerIndex.One);
             gamePadStatePlayerTwo = GamePad.GetState(PlayerIndex.Two);
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            keyState = Keyboard.GetState();
+
+            if (gamePadStatePlayerOne.Buttons.Back == ButtonState.Pressed
+                || gamePadStatePlayerTwo.Buttons.Back == ButtonState.Pressed 
+                || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            handleStick(playerOne, gamePadStatePlayerOne);
-            handleStick(playerTwo, gamePadStatePlayerTwo);
+            handleButtons(playerOne, gamePadStatePlayerOne);
+            handleButtons(playerTwo, gamePadStatePlayerTwo);
+            handleKeyBoard(keyState);
 
             ballMove(ball, ballSpeedX, ballSpeedY);
 
@@ -167,7 +174,7 @@ namespace Snake_2
         /// </summary>
         /// <param name="player"></param>
         /// <param name="gamePadState"></param>
-        private void handleStick(Player player, GamePadState gamePadState)
+        private void handleButtons(Player player, GamePadState gamePadState)
         {
             bool reachedTopOfScreen = player.position.Y <= 0;
             bool reachedBottomOfScreen = player.position.Y > GraphicsDevice.Viewport.Height - GameConstants.PLAYER_HEIGHT;
@@ -179,6 +186,32 @@ namespace Snake_2
             if (gamePadState.ThumbSticks.Left.Y < 0 && !reachedBottomOfScreen)
             {
                 player.position.Y += 10;
+            }
+        }
+
+        private void handleKeyBoard(KeyboardState keyState)
+        {
+            bool playerOneReachedTopOfScreen = playerOne.position.Y <= 0;
+            bool playerOneReachedBottomOfScreen = playerOne.position.Y > GraphicsDevice.Viewport.Height - GameConstants.PLAYER_HEIGHT;
+
+            bool playerTwoReachedTopOfScreen = playerTwo.position.Y <= 0;
+            bool playerTwoReachedBottomOfScreen = playerTwo.position.Y > GraphicsDevice.Viewport.Height - GameConstants.PLAYER_HEIGHT;
+
+            if (keyState.IsKeyDown(Keys.Up) && !playerTwoReachedTopOfScreen)
+            {
+                playerTwo.position.Y -= 10;
+            }
+            if (keyState.IsKeyDown(Keys.Down) && !playerTwoReachedBottomOfScreen)
+            {
+                playerTwo.position.Y += 10;
+            }
+            if (keyState.IsKeyDown(Keys.W) && !playerOneReachedTopOfScreen)
+            {
+                playerOne.position.Y -= 10;
+            }
+            if (keyState.IsKeyDown(Keys.S) && !playerOneReachedBottomOfScreen)
+            {
+                playerOne.position.Y += 10;
             }
         }
 
